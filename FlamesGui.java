@@ -4,20 +4,36 @@ import javax.swing.JFrame;
 
 public class FlamesGui {
 	private static String condition = "FLAMES";
+	private static FlamesGui fg;
 	
 	public static void main(String args[]){
-		String name1 = JOptionPane.showInputDialog("Please enter name 1: ");
-		String name2 = JOptionPane.showInputDialog("Please enter name 2: ");
+		fg = new FlamesGui();
 		
-		int remainingCount = getRemainingCount(name1, name2);
+		String name1 = fg.getNames(1);
+		String name2 = fg.getNames(2);
+				
+		int remainingCount = fg.getRemainingCount(name1, name2);
 		
 		String[] conditionAry = condition.split("");
-		String result = doFlames(remainingCount, conditionAry);
+		String result = fg.doFlames(remainingCount, conditionAry);
+		System.out.println("Result: "+name1+" & "+name2+" = "+fg.finalResultText(result));
 		
-		JOptionPane.showMessageDialog(null, "Result : " + finalResultText(result) , "Results", JOptionPane.PLAIN_MESSAGE );
+		JOptionPane.showMessageDialog(null, "Result : " + name1 + " & " + name2 + " = " + fg.finalResultText(result) , "Results", JOptionPane.PLAIN_MESSAGE );
 		System.exit(0);
 	}
-	private static int getRemainingCount(String name1, String name2){
+	
+	private String getNames(int idx){
+		String name1 = "";
+		try{
+			name1 = JOptionPane.showInputDialog("Please enter name "+idx+": ");
+		} catch(Exception e){
+			System.out.println(e);
+			fg.getNames(idx);
+		}
+		return name1;
+	}
+	
+	private int getRemainingCount(String name1, String name2){
 		String[] name1ary = name1.split("");
 		String[] name2ary = name2.split("");
 		
@@ -53,7 +69,7 @@ public class FlamesGui {
 		return (name1ary.length + name2ary.length);
 	}
 	
-	private static String doFlames(int remainingCount, String[] conditionAry){
+	private String doFlames(int remainingCount, String[] conditionAry){
 		String result = "";
 		
 		int conditionLength = conditionAry.length;
@@ -71,16 +87,16 @@ public class FlamesGui {
 			System.out.println(conditionAry.length+" INDEX "+remainingCount+" ==> "+deleteIndex);
 			System.out.println("B4: "+Arrays.toString(conditionAry));
 			if(deleteIndex < conditionAry.length){
-				conditionAry = flipArray(deleteIndex, conditionAry);
+				conditionAry = fg.flipArray(deleteIndex, conditionAry);
 			}
 			System.out.println("After: "+Arrays.toString(conditionAry));
-			return doFlames(remainingCount, conditionAry);
+			return fg.doFlames(remainingCount, conditionAry);
 		} else {
 			return Arrays.toString(conditionAry);
 		}
 	}
 	
-	private static String[] flipArray(int idx, String[] inputAry){
+	private String[] flipArray(int idx, String[] inputAry){
 		String[] temp = new String[idx];
 		for(int i=0; i+idx<inputAry.length; i++){
 			if(i<idx){
@@ -96,7 +112,7 @@ public class FlamesGui {
 		return inputAry;
 	}
 	
-	private static String finalResultText( String result ){
+	private String finalResultText( String result ){
 		switch(result){
 			case "[F]":
 				result = "Friends";
